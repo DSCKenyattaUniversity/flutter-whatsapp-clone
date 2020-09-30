@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'data/chatsrepository.dart';
 
 void main() => runApp(MyApp());
 
 //MyApp
-class MyApp extends StatelessWidget{
-  @override 
+class MyApp extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
-    return (MaterialApp( 
+    return (MaterialApp(
       title: 'DSCKU Whatsapp Clone',
-      theme: ThemeData( 
+      theme: ThemeData(
         primaryColor: Color(0xFF075E54),
       ),
       home: WhatsappUI(),
@@ -17,93 +18,72 @@ class MyApp extends StatelessWidget{
   }
 }
 
-class WhatsappUI extends StatelessWidget { 
-  @override 
+class WhatsappUI extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
+    final chats = ChatsRepository.getAll();
+
     return DefaultTabController(
-          initialIndex: 1,
-          length: 4,
-          child: Scaffold( 
-        appBar: AppBar( 
-          title: Text('Whatsapp'),
-          actions: <Widget>[
-            Icon(Icons.search),
-            Icon(Icons.more_vert),
-          ],
-          bottom: TabBar(
-            tabs: <Widget>[ 
-            Tab(child: Icon(Icons.photo_camera),),
-            Tab(child: Text('CHATS'),),
-            Tab(child: Text('STATUS'),),
-            Tab(child: Text('CALLS'),),
-          ],)
-          ),
+      initialIndex: 1,
+      length: 4,
+      child: Scaffold(
+          appBar: AppBar(
+              title: Text('Whatsapp'),
+              actions: <Widget>[
+                IconButton(icon: Icon(Icons.search, color: Color(0xFFFFFFFF),), onPressed: null),
+                IconButton(icon: Icon(Icons.more_vert, color: Color(0xFFFFFFFF),), onPressed: null),
+              ],
+              bottom: TabBar(
+                tabs: <Widget>[
+                  Tab(
+                    child: Icon(Icons.photo_camera),
+                  ),
+                  Tab(
+                    child: Text('CHATS'),
+                  ),
+                  Tab(
+                    child: Text('STATUS'),
+                  ),
+                  Tab(
+                    child: Text('CALLS'),
+                  ),
+                ],
+              )),
           body: TabBarView(
             children: <Widget>[
-            Text( 
-              "Hello"
-            ),
-            Center(child: ListView(children: <Widget>[
-             ListTile( 
-                leading: CircleAvatar(),
-                title:  Text('Alexa'),
-                subtitle: Text('last seen'),
-                trailing: Text('3:19 pm'),
+              Center(
+                child: Text("Camera"),
               ),
-              Divider(),
-              ListTile( 
-                leading: CircleAvatar(),
-                title:  Text('John'),
-                subtitle: Text('last seen'),
-                trailing: Text('12:00 pm'),
+              Center(
+                child: ListView.separated(
+                    separatorBuilder: (context, index) => Divider(),
+                    itemCount: chats.length,
+                    itemBuilder: (context, index) {
+                      var chat = chats[index];
+                      var message = chat.messages.last;
+
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              AssetImage(chat.avatar ?? "images/person.jpeg"),
+                        ),
+                        title: Text(chat.displayName),
+                        subtitle: Text(
+                          "${(chat.isGroupChat ? message.from + ': ' : '')}${message.messageText}",
+                          maxLines: 1,
+                        ),
+                        trailing: Text(message.sendTime),
+                      );
+                    }),
               ),
-              Divider(),
-              ListTile( 
-                leading: CircleAvatar(),
-                title:  Text('Hanna'),
-                subtitle: Text('last seen'),
-                trailing: Text('2:00 am'),
+              Center(
+                child: Text("Status"),
               ),
-              Divider(),
-              ListTile( 
-                leading: CircleAvatar(),
-                title:  Text('Sammie'),
-                subtitle: Text('last seen'),
-                trailing: Text('4:50 pm'),
+              Center(
+                child: Text("Calls"),
               ),
-              Divider(),
-              ListTile( 
-                leading: CircleAvatar(),
-                title:  Text('Kate'),
-                subtitle: Text('last seen'),
-                trailing: Text('6:50 pm'),
-              ),
-              Divider(),
-              ListTile( 
-                leading: CircleAvatar(),
-                title:  Text('Christine'),
-                subtitle: Text('last seen'),
-                trailing: Text('7:45 pm'),
-              ),
-              Divider(),
-              ListTile( 
-                leading: CircleAvatar(),
-                title:  Text('Erick'),
-                subtitle: Text('last seen'),
-                trailing: Text('10:50 pm'),
-              ),
-              Divider(),
-              
-            ],),
-            ),
-            Text( 
-              "status"
-            ),
-            Text( 
-              "calls"
-            ),
-          ],)
-      ),
-    ) ;
+            ],
+          )),
+    );
   }
 }
