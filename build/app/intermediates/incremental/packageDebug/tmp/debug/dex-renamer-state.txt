@@ -1,4 +1,0 @@
-#Fri Nov 08 23:37:59 EAT 2019
-base.0=/Users/sammie/Documents/flutter-whatsapp-clone/build/app/intermediates/transforms/dexMerger/debug/0
-path.0=classes.dex
-renamed.0=classes.dex
